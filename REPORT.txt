@@ -1,0 +1,2 @@
+- The error() function calls longjmp. What does longjmp do? Why is it needed?
+

@@ -1,0 +1,175 @@
+Due date: Sunday 1/31/2016 @ 11:59pm
+
+- Please remember to answer the questions in REPORT.txt
+
+Objective:
+~~~~~~~~~~
+
+- Improve your C programming skills
+- Work with pointers, structs, and the dynamic heap
+
+Assignment:
+~~~~~~~~~~~
+
+(1) Answer the questions in REPORT.txt
+
+(2) Finish an interpreter for a more realistic language that the one we defined
+in p1.
+
+The interpreter generally has 4 concerns:
+
+- Source character encoding. A string of ASCII characters in our case.
+
+- The lexical rules: how those characters are converted to a sequence of
+  tokens. Our language has the following tokens.
+
+  * keywords: if else while
+
+  * special characters: = == ( ) { } + * ;
+
+  * identifiers: start with lower case letters followed by a sequence of
+                 lower case letters and numbers.
+
+         examples: x hello h123 xy3yt
+
+  * immediate values: sequences of digits representing integers. They always
+                 start with a digit but could contain '_' characters that are
+                 ignored
+
+         examples: 12 0 12_234
+
+- The syntax: rules for combining tokens into meaningful constructs. Our syntax
+  looks like familiar syntax for popular languages like C and Java. You're given
+  most of that code but you need to change it in order to implement the "if" and
+  "while" statements. Things to keep in mind about our language:
+
+  * ';' is optional
+
+  * we only have assignment, if, and while statements
+
+  * the following operators are supported '*', '+', '=='
+
+- Semantics: assigning meaning to syntactically correct programs
+
+What you need to do:
+~~~~~~~~~~~~~~~~~~~~
+
+- Finish the implementation of the lexer. In order to keep the implementation
+  simple, the code assumes that there is a global variable that represents
+  the current valid token, starting with the first token in the program.
+
+  In order to finish the lexer, you need to implement the following functions:
+
+    char *remaining(); // returns the program text starting to the current token
+                       // used for error reporting
+
+    void consume();    // consume the current token, move the cursor to the
+                       // next valid token. Must handle end of string.
+
+    int isWhile();     // current token is "while"
+
+    int isIf();        // current token is "if"
+
+    int isElse();      // current token is "else"
+
+    int isSemi();      // current token is ';'
+
+    int isLeftBlock(); // current token is '{'
+
+    int isRightBlock();// current token is '}'
+
+    int isEq();        // current token is '='
+
+    int isEqEq();      // current token is "=="
+
+    int isLeft();      // current token is '('
+
+    int isRight();     // current token is ')'
+
+    int isEnd();       // current token is end of string (ASCII 0)
+
+    int isId();        // current token is identifier
+
+    int isInt();       // current token is an immediate value
+
+    int isMul();       // current token is '*'
+
+    int isPlus();      // current token is '+'
+
+    char *getId();     // if current token is an idenifier, return it as a
+                          string
+
+    int getInt();     // if current token is an immediate value, return the value
+
+- The language syntax is expressed using recursive functions starting with
+  the "program()" function. You need to understand what it's doing and you'll
+  need to make some changes to it in order to implement the "if" and "while"
+  statements.
+
+- You'll need to implement a symbol table, exposed using those two functions:
+
+    int get(char *id);             // return the value of the given identifier
+
+    void set(char *id, int value); // set the value of the given identifier
+                                   // and print it
+
+Examples:
+~~~~~~~~~
+
+./p2 "x = 10;"
+x:10
+
+./p2 "x = 2_09 ; a = 17;"
+x:209
+a:17
+
+./p2 "x = 2_09 ; a = 17; x = 3 + 12"
+x:209
+a:17
+x:15
+
+Files you're allowed to change:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   p2.c
+
+Files you're supposed to leave alone:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Everything else
+   
+To compile:
+~~~~~~~~~~~
+
+    make
+
+To run test:
+~~~~~~~~~~~~
+
+    make clean test
+
+To run one test (e.g. t1):
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    make clean t1.run
+
+To make the output less noisy:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    make -s clean test
+
+To add your own tests:
+~~~~~~~~~~~~~~~~~~~~~~
+
+Let's say you want to create a test called "bob".
+
+   - create a file bob.test that contains a program in the first line
+   - create a file bob.ok that contains the expected output
+
+To debug with gdb
+~~~~~~~~~~~~~~~~~
+
+    make
+    gdb ./p2
+    (gdb) run "x = 100; a = 30;"
+
