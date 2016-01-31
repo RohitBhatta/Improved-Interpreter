@@ -26,18 +26,24 @@ struct Entry {
     int val;
 };
 
-//Entry *head;
-//Entry *table = malloc(sizeof(*table));
 struct Entry *table;
 
-//FIX THIS
 int get(char *id) {
     struct Entry *head = table;
+    //printf("%c\n", 'a');
     while (head != NULL) {
-	if ((head -> name) == id) {
+	//printf("%c\n", 'b');
+	//printf("%s\n", id);
+	//printf("%s\n", head -> name);
+	/*if ((head -> name) == id) {
+	    printf("%c\n", 'c');
+	    return head -> val;
+	}*/
+	if (strcmp(head -> name, id) == 0) {
+	    //printf("%c\n", 'c');
 	    return head -> val;
 	}
-	
+	//printf("%c\n", 'd');
 	head = head -> next;
     }	
     return 0;
@@ -68,13 +74,11 @@ void set(char *id, int value) {
 	printf("%s", id);
 	printf("%c", ':');
 	printf("%d\n", value);
+	//printf("%d\n", current -> val);
     }
 }
 
 static char *remaining() {
-    /*if (token == NULL) {
-	return NULL;
-    }*/
     return token;
 }
 
@@ -369,6 +373,7 @@ int statement() {
     } else if (isIf()) {
         consume(2);
         int ifCheck = expression();
+	//printf("%d\n", ifCheck);
 	if (ifCheck == 1) {
 	    statement();
             if (isElse()) {
