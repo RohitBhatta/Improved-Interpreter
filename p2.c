@@ -18,6 +18,7 @@ int idSize = 0;
 int intSize = 0;
 int first = 0;
 int setCheck = 0;
+int blockCheck = 0;
 
 struct Entry {
     struct Entry *next;
@@ -43,35 +44,6 @@ int get(char *id) {
 }
 
 void set(char *id, int value) {
-    //Entry *table = malloc(sizeof(*table));
-    /*if (table == NULL) {
-	printf("Out of memory\n");
-    }
-    else {
-	table -> name = id;
-	table -> val = value;
-	table -> next = 0;
-	printf("%s", id);
-	printf("%c", ':');
-	printf("%d\n", value);
-    }*/
-    /*if (first == 0) {
-	head = table;
-	first++;
-    }*/
-    //head = table;
-    /*if (table == NULL) {
-	printf("Out of memory\n");
-    }
-    table -> next = NULL;
-    Entry *current = table;
-    while (current -> next != NULL) {
-	current = current -> next;
-    }
-
-    current -> next = (Entry) malloc(sizeof(Entry));
-    current -> next -> name = id;
-    current -> next -> next = NULL;*/
     struct Entry *current = malloc(sizeof(struct Entry));
     if (first == 0) {
 	table -> name = id;
@@ -369,7 +341,9 @@ int statement() {
         consume(1);
         int v = expression();
 	if (setCheck == 1) {
-            setCheck = 0;
+	    if (blockCheck == 0) {		
+                setCheck = 0;
+	    }
 	}
 	else {
 	    set(id, v);
@@ -382,10 +356,15 @@ int statement() {
         return 1;
     } else if (isLeftBlock()) {
         consume(1);
+	if (setCheck == 1) {
+	    blockCheck = 1;
+	}
         seq();
         if (!isRightBlock())
             error();
         consume(1);
+	setCheck = 0;
+	blockCheck = 0;
         return 1;
     } else if (isIf()) {
         consume(2);
