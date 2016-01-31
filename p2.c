@@ -20,19 +20,31 @@ int first = 0;
 int setCheck = 0;
 int blockCheck = 0;
 int elseCheck = 0;
+int whileSetCheck = 0;
+int whileBlock = 0;
 
 struct Entry {
     struct Entry *next;
     char *name;
     int val;
+    //struct Entry *prev;
 };
 
 struct Entry *table;
 
 int get(char *id) {
     struct Entry *head = table;
+    /*while (head -> prev != NULL) {
+	head = head -> prev;
+    }*/
     while (head != NULL) {
+	//printf("%c\n", 'a');
+	//printf("%s\n", head -> name);
+	//printf("%d\n", head -> val);
+	//printf("%s\n", id);
 	if (strcmp(head -> name, id) == 0) {
+	    //printf("%d\n", head -> val);
+	    //printf("%c\n", 'b');
 	    return head -> val;
 	}
 	head = head -> next;
@@ -46,6 +58,7 @@ void set(char *id, int value) {
 	table -> name = id;
 	table -> val = value;
 	table -> next = NULL;
+	//table -> prev = NULL;
     }
     else {
 	current = table;
@@ -54,11 +67,11 @@ void set(char *id, int value) {
 	}
     }
     current -> next = malloc(sizeof(struct Entry));
-    current = current -> next;
-    if (current == NULL) {
+    if (current -> next == NULL) {
 	printf("Out of memory\n");
     }
     else {
+	current = current -> next;
 	current -> name = id;
 	current -> val = value;
 	current -> next = NULL;
@@ -402,10 +415,21 @@ int statement() {
         /* Implement while */
 	consume(5);
 	int whileCheck = expression();
-	while(whileCheck) {
-	    statement();
-	    whileCheck = expression();
+	//printf("%d\n", get("go"));
+	//printf("%d\n", get("n"));
+	//printf("%d\n", whileCheck);
+	//printf("%c\n", 'a');
+	if (setCheck == 0) {
+	    while(whileCheck) {
+		//printf("%c\n", 'b');
+		statement();
+		whileCheck = expression();
+	    }
 	}
+	else {
+	    statement();
+	}
+	setCheck = 0;
         return 1;
     } else if (isSemi()) {
         consume(1);
