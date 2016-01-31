@@ -335,14 +335,14 @@ int statement() {
             error();
         consume(1);
         int v = expression();
-	if (setCheck == 1) {
-	    if (blockCheck == 0) {		
+	if (setCheck == 1 || elseCheck == 1) {
+	    /*if (blockCheck == 0) {		
                 setCheck = 0;
-	    }
-	    if (elseCheck == 1) {
+	    }*/
+	    /*if (elseCheck == 1) {
 		elseCheck = 0;
 		setCheck = 0;
-	    }
+	    }*/
 	}
 	else {
 	    set(id, v);
@@ -385,6 +385,7 @@ int statement() {
 		consume(4);
 		elseCheck = 1;
 		statement();
+		elseCheck = 0;
 	    }
 	}
 	else {
