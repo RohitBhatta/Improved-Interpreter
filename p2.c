@@ -19,6 +19,7 @@ int intSize = 0;
 int first = 0;
 int setCheck = 0;
 int blockCheck = 0;
+int elseCheck = 0;
 
 struct Entry {
     struct Entry *next;
@@ -30,20 +31,10 @@ struct Entry *table;
 
 int get(char *id) {
     struct Entry *head = table;
-    //printf("%c\n", 'a');
     while (head != NULL) {
-	//printf("%c\n", 'b');
-	//printf("%s\n", id);
-	//printf("%s\n", head -> name);
-	/*if ((head -> name) == id) {
-	    printf("%c\n", 'c');
-	    return head -> val;
-	}*/
 	if (strcmp(head -> name, id) == 0) {
-	    //printf("%c\n", 'c');
 	    return head -> val;
 	}
-	//printf("%c\n", 'd');
 	head = head -> next;
     }	
     return 0;
@@ -348,6 +339,10 @@ int statement() {
 	    if (blockCheck == 0) {		
                 setCheck = 0;
 	    }
+	    if (elseCheck == 1) {
+		elseCheck = 0;
+		setCheck = 0;
+	    }
 	}
 	else {
 	    set(id, v);
@@ -374,16 +369,25 @@ int statement() {
         consume(2);
         int ifCheck = expression();
 	//printf("%d\n", ifCheck);
-	if (ifCheck == 1) {
+	//printf("%d\n", setCheck);
+	if (ifCheck == 1 && setCheck == 0) {
 	    statement();
             if (isElse()) {
                 consume(4);
             }
 	}
-	//I need to consume the statement there if the expression is false
+	else if (setCheck == 1) {
+	    statement();
+	    if (isElse()) {
+		consume(4);
+		elseCheck = 1;
+		statement();
+	    }
+	}
 	else {
 	    setCheck = 1;
 	    statement();
+	    setCheck = 0;
 	    if (isElse()) {
 		consume(4);
 		statement();
@@ -401,6 +405,9 @@ int statement() {
         return 1;
     } else if (isSemi()) {
         consume(1);
+	setCheck = 0;
+	blockCheck = 0;
+	elseCheck = 0;
         return 1;
     } else {
         return 0;
