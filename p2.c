@@ -27,28 +27,18 @@ struct Entry {
     struct Entry *next;
     char *name;
     int val;
-    //struct Entry *prev;
 };
 
 struct Entry *table;
 
 int get(char *id) {
     struct Entry *head = table;
-    /*while (head -> prev != NULL) {
-	head = head -> prev;
-    }*/
     while (head != NULL) {
-	//printf("%c\n", 'a');
-	//printf("%s\n", head -> name);
-	//printf("%d\n", head -> val);
-	//printf("%s\n", id);
 	if (strcmp(head -> name, id) == 0) {
-	    //printf("%d\n", head -> val);
-	    //printf("%c\n", 'b');
 	    return head -> val;
 	}
 	head = head -> next;
-    }	
+    }
     return 0;
 }
 
@@ -58,7 +48,7 @@ void set(char *id, int value) {
 	table -> name = id;
 	table -> val = value;
 	table -> next = NULL;
-	//table -> prev = NULL;
+	first++;
     }
     else {
 	current = table;
@@ -78,7 +68,6 @@ void set(char *id, int value) {
 	printf("%s", id);
 	printf("%c", ':');
 	printf("%d\n", value);
-	//printf("%d\n", current -> val);
     }
 }
 
@@ -349,13 +338,7 @@ int statement() {
         consume(1);
         int v = expression();
 	if (setCheck == 1 || elseCheck == 1) {
-	    /*if (blockCheck == 0) {		
-                setCheck = 0;
-	    }*/
-	    /*if (elseCheck == 1) {
-		elseCheck = 0;
-		setCheck = 0;
-	    }*/
+
 	}
 	else {
 	    set(id, v);
@@ -381,8 +364,6 @@ int statement() {
     } else if (isIf()) {
         consume(2);
         int ifCheck = expression();
-	//printf("%d\n", ifCheck);
-	//printf("%d\n", setCheck);
 	if (ifCheck == 1 && setCheck == 0) {
 	    statement();
             if (isElse()) {
@@ -421,7 +402,7 @@ int statement() {
 	//printf("%c\n", 'a');
 	if (setCheck == 0) {
 	    while(whileCheck) {
-		//printf("%c\n", 'b');
+		printf("%c\n", 'b');
 		statement();
 		whileCheck = expression();
 	    }
