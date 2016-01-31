@@ -375,6 +375,9 @@ int statement() {
             if (isElse()) {
                 consume(4);
             }
+	    setCheck = 1;
+	    statement();
+	    setCheck = 0;
 	}
 	else if (setCheck == 1) {
 	    statement();
