@@ -1,2 +1,3 @@
 - The error() function calls longjmp. What does longjmp do? Why is it needed?
 
+The main purpose of the longjmp() function is for error handling. It restores the contents of the registers that were saved by the setjmp() function. It basically returns to the state of the program when setjmp() was called. The combination of setjmp() and longjmp() is used to elegantly deal with an error. If the input contains tokens in the wrong order (or something deemed wrong by the program code), the error() function is called and in turn it calls longjmp(). The state is saved in the jmp_buf variable declared at the top called escape and the second parameter of longjmp() returns 1.
