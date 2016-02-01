@@ -378,6 +378,7 @@ int expression() {
 }
 
 int statement() {
+    consume(0);
     if (isId()) {
         char *id = getId();
 	//printf("%c\n", 'i');
