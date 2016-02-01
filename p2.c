@@ -27,6 +27,7 @@ int whileTrue = 0;
 int elementCount = 0;
 int sameCount = 0;
 int whileCheck = 0;
+int semiCheck = 0;
 
 struct Entry {
     struct Entry *next;
@@ -471,6 +472,9 @@ int statement() {
 	    printf("%c\n", 'a');
 	    whileTrue = 1;
 	    statement();
+	    if (semiCheck) {
+		break;
+	    }
 	    token = whilePointer;
 	    whileCheck = expression();
 	}
@@ -494,6 +498,7 @@ int statement() {
 	elseCheck = 0;
 	whileSetCheck = 0;
 	whileTrue = 0;
+	semiCheck = 1;
 	/*if (whileTrue) {
 	    token = whilePointer;
 	    whileTrue = 0;
