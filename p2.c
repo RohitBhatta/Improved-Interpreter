@@ -41,6 +41,7 @@ int get(char *id) {
     struct Entry *head = table;
     int arr[elementCount + first + 1];
     arr[0] = 0;
+    sameCount = 0;
     /*while (head != NULL) {
 	if (strcmp(head -> name, id) == 0) {
 	    return head -> val;
@@ -478,7 +479,7 @@ int statement() {
 	//printf("%c\n", 'a');
 	//if (whileCheck) {
 	while (whileCheck) {
-	    printf("%c\n", 'a');
+	    //printf("%c\n", 'a');
 	    whileTrue = 1;
 	    statement();
 	    /*if (semiCheck) {
