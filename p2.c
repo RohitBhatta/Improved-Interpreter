@@ -459,6 +459,14 @@ int statement() {
         /* Implement while */
 	//whilePointer = token;
 	consume(5);
+	if (setCheck) {
+	    //printf("%s\n", "set");
+	    //whileSetCheck = 1;
+	    //whileTrue = 0;
+	    expression();
+	    //statement();
+	}
+	else {
 	if (whileTrue == 0) {
 	    whilePointer = token;
 	    whileCheck = expression();
@@ -473,11 +481,12 @@ int statement() {
 	    printf("%c\n", 'a');
 	    whileTrue = 1;
 	    statement();
-	    if (semiCheck) {
+	    /*if (semiCheck) {
 		break;
-	    }
+	    }*/
 	    token = whilePointer;
 	    whileCheck = expression();
+	}
 	}
 	//}
 	//else {
@@ -493,13 +502,14 @@ int statement() {
 	whileTrue = 0;
         return 1;
     } else if (isSemi()) {
+	//printf("%s\n", "semi");
         consume(1);
 	setCheck = 0;
 	blockCheck = 0;
 	elseCheck = 0;
 	whileSetCheck = 0;
-	whileTrue = 0;
-	semiCheck = 1;
+	//whileTrue = 0;
+	//semiCheck = 1;
 	/*if (whileTrue) {
 	    token = whilePointer;
 	    whileTrue = 0;
