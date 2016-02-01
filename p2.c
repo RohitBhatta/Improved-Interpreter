@@ -492,6 +492,8 @@ int statement() {
 	setCheck = 0;
 	blockCheck = 0;
 	elseCheck = 0;
+	whileSetCheck = 0;
+	whileTrue = 0;
 	/*if (whileTrue) {
 	    token = whilePointer;
 	    whileTrue = 0;
