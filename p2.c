@@ -14,6 +14,7 @@ static jmp_buf escape;
 
 //Global variables
 char *token;
+char *whilePointer;
 int idSize = 0;
 int intSize = 0;
 int first = 0;
@@ -22,6 +23,10 @@ int blockCheck = 0;
 int elseCheck = 0;
 int whileSetCheck = 0;
 int whileBlock = 0;
+int whileTrue = 0;
+int elementCount = 0;
+int sameCount = 0;
+int whileCheck = 0;
 
 struct Entry {
     struct Entry *next;
@@ -33,13 +38,43 @@ struct Entry *table;
 
 int get(char *id) {
     struct Entry *head = table;
-    while (head != NULL) {
+    int arr[elementCount + first + 1];
+    arr[0] = 0;
+    /*while (head != NULL) {
 	if (strcmp(head -> name, id) == 0) {
 	    return head -> val;
 	}
 	head = head -> next;
+    }*/
+    while (head != NULL) {
+	//printf("%s\n", head -> name);
+	//printf("%s\n", id);
+	//char *temp = head -> name;
+	if (strcmp(head -> name, id) == 0) {
+	    //printf("%s\n", id);
+	    sameCount++;
+	    arr[sameCount] = head -> val;
+	}
+	head = head -> next;
     }
-    return 0;
+    /*if (strcmp(head -> name, id) == 0) {
+	sameCount++;
+        arr[sameCount] = head -> val;
+        //sameCount++;
+    }*/
+    //printf("%c\n", 'a');
+    /*if (sameCount > 0) {
+	//printf("%s\n", id);
+	//printf("%d\n", arr[sameCount - 1]);
+	return arr[sameCount - 1];
+    }*/
+    /*if (arr[sameCount - 1] != 0) {
+	return arr[sameCount - 1];
+    }
+    return 0;*/
+    //printf("%s\n", id);
+    //printf("%d\n", arr[sameCount]);
+    return arr[sameCount];
 }
 
 void set(char *id, int value) {
@@ -68,6 +103,7 @@ void set(char *id, int value) {
 	printf("%s", id);
 	printf("%c", ':');
 	printf("%d\n", value);
+	elementCount++;
     }
 }
 
@@ -81,9 +117,21 @@ static void error() {
 }
 
 void consume(int length) {
-    token += length;
+    if (length >= 0) {
+	token += length;
+    }
+    /*else {
+	token -= length;
+	printf("%c\n", token[19]);
+    }
+    if (whileTrue) {
+	whileCount -= length;
+    }*/
     while (token[0] == ' ') {
 	token++;
+	/*if (whileTrue) {
+	    whileCount--;
+	}*/
     }
 }
 
@@ -337,7 +385,7 @@ int statement() {
             error();
         consume(1);
         int v = expression();
-	if (setCheck == 1 || elseCheck == 1) {
+	if (setCheck == 1 || elseCheck == 1 || whileSetCheck == 1) {
 
 	}
 	else {
@@ -347,7 +395,9 @@ int statement() {
         if (isSemi()) {
             consume(1);
         }
-
+	/*if (whileTrue) {
+	    token = whilePointer;
+	}*/
         return 1;
     } else if (isLeftBlock()) {
         consume(1);
@@ -358,10 +408,14 @@ int statement() {
         if (!isRightBlock())
             error();
         consume(1);
+	/*if (whileTrue) {
+	    token = whilePointer;
+	}*/
 	setCheck = 0;
 	blockCheck = 0;
         return 1;
     } else if (isIf()) {
+	//printf("%c\n", 'f');
         consume(2);
         int ifCheck = expression();
 	if (ifCheck == 1 && setCheck == 0) {
@@ -376,6 +430,7 @@ int statement() {
 	else if (setCheck == 1) {
 	    statement();
 	    if (isElse()) {
+		//printf("%c\n", 'e');
 		consume(4);
 		elseCheck = 1;
 		statement();
@@ -387,36 +442,60 @@ int statement() {
 	    statement();
 	    setCheck = 0;
 	    if (isElse()) {
+		//printf("%c\n", 'e');
 		consume(4);
 		statement();
 	    }
 	}
+	/*if (whileTrue) {
+	    token = whilePointer;
+	}*/
         return 1;
     } else if (isWhile()) {
+	//printf("%c\n", 'w');
+	//printf("%c\n", 'a');
         /* Implement while */
+	//whilePointer = token;
 	consume(5);
-	int whileCheck = expression();
+	if (whileTrue == 0) {
+	    whilePointer = token;
+	    whileCheck = expression();
+	}
 	//printf("%d\n", get("go"));
 	//printf("%d\n", get("n"));
+	//printf("%d\n", get("go"));
 	//printf("%d\n", whileCheck);
 	//printf("%c\n", 'a');
-	if (setCheck == 0) {
-	    while(whileCheck) {
-		printf("%c\n", 'b');
-		statement();
-		whileCheck = expression();
-	    }
-	}
-	else {
+	//if (whileCheck) {
+	while (whileCheck) {
+	    printf("%c\n", 'a');
+	    whileTrue = 1;
 	    statement();
+	    token = whilePointer;
+	    whileCheck = expression();
 	}
-	setCheck = 0;
+	//}
+	//else {
+	whileSetCheck = 1;
+	whileTrue = 0;
+	statement();
+	//}
+	/*if (whileTrue) {
+	    token = whilePointer;
+	    whileTrue = 0;
+	}*/
+	whileSetCheck = 0;
+	whileTrue = 0;
         return 1;
     } else if (isSemi()) {
         consume(1);
 	setCheck = 0;
 	blockCheck = 0;
 	elseCheck = 0;
+	/*if (whileTrue) {
+	    token = whilePointer;
+	    whileTrue = 0;
+	}*/
         return 1;
     } else {
         return 0;
@@ -446,6 +525,7 @@ void interpret(char *prog) {
     token = prog;
     int x = setjmp(escape);
     if (x == 0) {
+	consume(0);
         program();
     }
 }
